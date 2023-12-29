@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ series is defined ? 'Editar' : 'Adicionar' }} Série{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h1>{{ series is defined ? 'Editar' : 'Adicionar' }} Série</h1>
+    <form method="post" action="{{ series is defined ? path('app_series_edit', {series: series.id}) : path('app_series_create') }}">
+        <div class="form-group">
+            <label for="name" class="mb-2">Nome da série:</label>
+            <input type="text" name="name" id="name" class="form-control" value="{{ series is defined ? series.name : '' }}">
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">{{ series is defined ? 'Editar' : 'Adicionar' }}</button>
+    </form>
+    <a href="{{ path('app_series') }}" class="btn btn-secondary mt-3">Mostrar listagem das séries</a>
+</div>
+{% endblock %}

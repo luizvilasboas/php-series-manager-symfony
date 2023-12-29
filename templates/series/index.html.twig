@@ -4,6 +4,11 @@
 
 {% block body %}
 <div class="container mt-4">
+    {% if successMessage is not empty %}
+        <div class="alert alert-success">
+            {{ successMessage }}
+        </div>
+    {% endif %}
     {% if series is empty %}
         <h1>Não há séries disponíveis.</h1>
         <a href="{{ path('app_series_form') }}" class="btn btn-primary">Adicionar uma nova série</a>
@@ -14,9 +19,12 @@
             {% for serie in series %}
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     {{ serie.name }}
-                    <form method="post" action="{{ path('app_series_delete', {id: serie.id}) }}">
-                        <button class="btn btn-sm btn-danger">Deletar</button>
-                    </form>
+                    <div class="d-flex gap-2">
+                        <a href="{{ path('app_series_edit_form', {series: serie.id}) }}" class="btn btn-sm btn-primary">Editar</a>
+                        <form method="post" action="{{ path('app_series_delete', {id: serie.id}) }}">
+                            <button class="btn btn-sm btn-danger">Deletar</button>
+                        </form>
+                    </div>
                 </li>
             {% endfor %}
         </ul>
