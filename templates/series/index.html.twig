@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Listagem de séries{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    {% if series is empty %}
+        <h1>Não há séries disponíveis.</h1>
+        <a href="/series/create" class="btn btn-primary">Adicionar uma nova série</a>
+    {% else %}
+        <h1>Listagem de séries</h1>
+        <a href="/series/create" class="btn btn-primary">Adicionar uma nova série</a>
+        <ul class="list-group mt-3">
+            {% for serie in series %}
+                <li class="list-group-item">{{ serie.name }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</div>
+{% endblock %}
