@@ -23,16 +23,12 @@ class SeriesController extends AbstractController
     }
 
     #[Route('/series', name: 'app_series', methods: ['GET'])]
-    public function index(Request $request): Response
+    public function index(): Response
     {
         $seriesList = $this->seriesRepository->findAll();
-        $session = $request->getSession();
-        $successMessage = $session->get('success');
-        $session->remove('success');
-    
+
         return $this->render('series/index.html.twig', [
             'series' => $seriesList,
-            'successMessage' => $successMessage
         ]);
     }
 
@@ -51,19 +47,16 @@ class SeriesController extends AbstractController
         $series = new Series($seriesName);
 
         $this->seriesRepository->add($series, true);
-        $session = $request->getSession();
-        $session->set('success', 'Série criada com sucesso');
+        $this->addFlash('success', 'Série criada com sucesso');
 
         return new RedirectResponse('/series');
     }
 
     #[Route('/series/delete/{id}', name: 'app_series_delete', methods: ['POST'])]
-    public function deleteSeries(int $id, Request $request): Response
+    public function deleteSeries(int $id): Response
     {
         $this->seriesRepository->removeById($id);
-    
-        $session = $request->getSession();
-        $session->set('success', 'Série removida com sucesso');
+        $this->addFlash('success', 'Série removida com sucesso');
 
         return new RedirectResponse('/series');
     }
@@ -73,16 +66,14 @@ class SeriesController extends AbstractController
     {
         return $this->render('series/form.html.twig', compact('series'));
     }
-    
+
     #[Route('/series/edit/{series}', name: 'app_series_edit', methods: ['POST'])]
     public function editSeries(Series $series, Request $request): Response
     {
-        $session = $request->getSession();
-        
         $series->setName($request->request->get('name'));
         $this->entityManager->flush();
-        
-        $session->set('success', 'Série editada com sucesso');
+
+        $this->addFlash('success', 'Série editada com sucesso');
 
         return new RedirectResponse('/series');
     }
