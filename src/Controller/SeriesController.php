@@ -8,28 +8,39 @@ use App\Entity\Season;
 use App\Entity\Series;
 use App\Form\SeriesType;
 use App\Repository\SeriesRepository;
+use DateInterval;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Cache\ItemInterface;
 
 class SeriesController extends AbstractController
 {
     private SeriesRepository $seriesRepository;
+
     private EntityManagerInterface $entityManager;
 
-    public function __construct(SeriesRepository $seriesRepository, EntityManagerInterface $entityManager)
+    private CacheInterface $cache;
+
+    public function __construct(SeriesRepository $seriesRepository, EntityManagerInterface $entityManager, CacheInterface $cache)
     {
         $this->seriesRepository = $seriesRepository;
         $this->entityManager = $entityManager;
+        $this->cache = $cache;
     }
 
     #[Route('/series', name: 'app_series', methods: ['GET'])]
     public function index(): Response
     {
-        $seriesList = $this->seriesRepository->findAll();
+        $seriesList = $this->cache->get("series_list", function (ItemInterface $item) {
+            $item->expiresAfter(new DateInterval('PT10S'));
+
+            return $this->seriesRepository->findAll();
+        });
 
         return $this->render('series/index.html.twig', [
             'series' => $seriesList,
