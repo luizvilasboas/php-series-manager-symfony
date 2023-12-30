@@ -1,35 +1,42 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Listagem de séries{% endblock %}
+{% block title %}
+    Listagem de séries
+{% endblock %}
 
 {% block body %}
-<div class="container mt-4">
-    {% for label, messages in app.flashes %}
-        {% for message in messages %}
-            <div class="alert alert-{{ label }}">
-                {{ message }}
-            </div>
-        {% endfor %}
-    {% endfor %}
     {% if series is empty %}
-        <h1>Não há séries disponíveis.</h1>
-        <a href="{{ path('app_series_form') }}" class="btn btn-primary">Adicionar uma nova série</a>
+        <h1>
+            Não há séries disponíveis.
+        </h1>
+        <a href="{{ path('app_series_form') }}" class="btn btn-primary">
+            Adicionar uma nova série
+        </a>
     {% else %}
-        <h1>Listagem de séries</h1>
-        <a href="{{ path('app_series_form') }}" class="btn btn-primary">Adicionar uma nova série</a>
+        <h1>
+            Listagem de séries
+        </h1>
+        <a href="{{ path('app_series_form') }}" class="btn btn-primary">
+            Adicionar uma nova série
+        </a>
         <ul class="list-group mt-3">
             {% for serie in series %}
                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                <a href="{{ path('app_seasons', {id: serie.id}) }}" alt="{{ serie.name }}">{{ serie.name }}</a>
+                    <a href="{{ path('app_seasons', {id: serie.id}) }}" alt="{{ serie.name }}">
+                        {{ serie.name }}
+                    </a>
                     <div class="d-flex gap-2">
-                        <a href="{{ path('app_series_edit_form', {series: serie.id}) }}" class="btn btn-sm btn-primary">Editar</a>
+                        <a href="{{ path('app_series_edit_form', {series: serie.id}) }}" class="btn btn-sm btn-primary">
+                            Editar
+                        </a>
                         <form method="post" action="{{ path('app_series_delete', {id: serie.id}) }}">
-                            <button class="btn btn-sm btn-danger">Deletar</button>
+                            <button class="btn btn-sm btn-danger">
+                                Deletar
+                            </button>
                         </form>
                     </div>
                 </li>
             {% endfor %}
         </ul>
     {% endif %}
-</div>
 {% endblock %}
