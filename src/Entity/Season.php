@@ -89,4 +89,12 @@ class Season
 
         return $this;
     }
+
+    /**
+     *@return Collection<int, Episode>
+     */
+    public function getWatchedEpisodes(): Collection
+    {
+        return $this->episodes->filter(fn (Episode $episode) => $episode->isWatched());
+    }
 }
