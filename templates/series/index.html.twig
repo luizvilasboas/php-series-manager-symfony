@@ -20,7 +20,7 @@
         <ul class="list-group mt-3">
             {% for serie in series %}
                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                    {{ serie.name }}
+                <a href="{{ path('app_seasons', {id: serie.id}) }}" alt="{{ serie.name }}">{{ serie.name }}</a>
                     <div class="d-flex gap-2">
                         <a href="{{ path('app_series_edit_form', {series: serie.id}) }}" class="btn btn-sm btn-primary">Editar</a>
                         <form method="post" action="{{ path('app_series_delete', {id: serie.id}) }}">
