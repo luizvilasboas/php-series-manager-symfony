@@ -14,6 +14,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
@@ -21,16 +23,16 @@ use Symfony\Contracts\Cache\ItemInterface;
 class SeriesController extends AbstractController
 {
     private SeriesRepository $seriesRepository;
-
     private EntityManagerInterface $entityManager;
-
     private CacheInterface $cache;
+    private MailerInterface $mailerInterface;
 
-    public function __construct(SeriesRepository $seriesRepository, EntityManagerInterface $entityManager, CacheInterface $cache)
+    public function __construct(SeriesRepository $seriesRepository, EntityManagerInterface $entityManager, CacheInterface $cache, MailerInterface $mailerInterface)
     {
         $this->seriesRepository = $seriesRepository;
         $this->entityManager = $entityManager;
         $this->cache = $cache;
+        $this->mailerInterface = $mailerInterface;
     }
 
     #[Route('/series', name: 'app_series', methods: ['GET'])]
@@ -82,6 +84,17 @@ class SeriesController extends AbstractController
         }
 
         $this->seriesRepository->add($input);
+
+        $user = $this->getUser();
+
+        $email = (new Email())
+            ->from('hello@example.com')
+            ->to($user->getUserIdentifier())
+            ->subject('Nova série criada')
+            ->text("Série {$series->getName()} foi criada")
+            ->html("<h1>Série criada</h1><p>Série \"{$series->getName()}\" foi criada</p>");
+
+        $this->mailerInterface->send($email);
 
         $this->addFlash('success', 'Série criada com sucesso');
 
