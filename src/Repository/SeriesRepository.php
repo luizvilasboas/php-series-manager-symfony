@@ -2,8 +2,7 @@
 
 namespace App\Repository;
 
-use App\DTO\SeriesCreateFromInput;
-use App\Entity\Episode;
+use App\DTO\SeriesCreationInputDTO;
 use App\Entity\Series;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -30,7 +29,7 @@ class SeriesRepository extends ServiceEntityRepository
         $this->episodeRepository = $episodeRepository;
     }
 
-    public function add(SeriesCreateFromInput $input): void
+    public function add(SeriesCreationInputDTO $input): void
     {
         $entityManager = $this->getEntityManager();
 

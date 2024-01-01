@@ -6,7 +6,6 @@ use App\Repository\SeriesRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: SeriesRepository::class)]
 class Series
@@ -17,8 +16,7 @@ class Series
     private int $id;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
-    #[Assert\Length(min: 5)]
+
     private string $name;
 
     #[ORM\OneToMany(mappedBy: 'series', targetEntity: Season::class, orphanRemoval: true, cascade: ['persist'])]
