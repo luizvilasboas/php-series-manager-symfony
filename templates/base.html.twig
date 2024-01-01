@@ -17,12 +17,21 @@
     </head>
     <body>
         <div class="container-fluid bg-light d-flex justify-content-between align-items-center p-3">
-            <a href="{{ path('app_series') }}">
-                Home
-            </a>
-            <a href="{{ path('app_logout') }}">
-                Sair
-            </a>
+            {% if is_granted('ROLE_USER') %}
+                <a href="{{ path('app_series') }}">
+                    Home
+                </a>
+                <a href="{{ path('app_logout') }}">
+                    Sair
+                </a>
+            {% else %}
+                <a href="{{ path('app_login') }}">
+                    Login
+                </a>
+                <a href="{{ path('app_login') }}">
+                    Register
+                </a>
+            {% endif %}
         </div>
         <div class="container mt-4">
             {% for label, messages in app.flashes %}
