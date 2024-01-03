@@ -8,13 +8,10 @@ This undertaking was created within the framework of an Alura course aimed at ma
 - Handling of mailing, asynchronous processing, uploads, and testing
 
 ## Usage
-Certainly! Here's a sample installation process for a Symfony project in Markdown format:
-
-# Symfony Project Installation Guide
 
 Follow these steps to set up and run the Symfony project on your local machine.
 
-## Prerequisites
+### Prerequisites
 
 Ensure that the following prerequisites are installed on your system:
 
@@ -23,7 +20,7 @@ Ensure that the following prerequisites are installed on your system:
 - Symfony CLI
 - Node.js and npm (for asset management)
 
-## Steps
+### Steps
 
 1. **Clone the Repository:**
 
