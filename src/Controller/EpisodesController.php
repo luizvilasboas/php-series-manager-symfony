@@ -12,7 +12,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class EpisodesController extends AbstractController
 {
-
     public function __construct(private EntityManagerInterface $entityManager)
     {
     }
@@ -38,6 +37,7 @@ class EpisodesController extends AbstractController
         }
 
         $this->entityManager->flush();
+
         $this->addFlash('success', 'Episódios marcados como assistidos');
 
         return new RedirectResponse("/season/{$season->getId()}/episodes");

@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Episode;
+use App\Entity\Season;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -21,6 +22,12 @@ class EpisodeRepository extends ServiceEntityRepository
         parent::__construct($registry, Episode::class);
     }
 
+    /**
+     * @param int $episodesPerSeason
+     * @param Season[] $seasons
+     * @return void
+     * @throws \Doctrine\DBAL\Exception
+     */
     public function addEpisodesPerSeason(int $episodesPerSeason, array $seasons): void
     {
         $params = array_fill(0, $episodesPerSeason, '(?, ?)');
@@ -33,7 +40,6 @@ class EpisodeRepository extends ServiceEntityRepository
                 $stm->bindValue($i * 2 + 1, $season->getId(), \PDO::PARAM_INT);
                 $stm->bindValue($i * 2 + 2, $i + 1, \PDO::PARAM_INT);
             }
-
             $stm->executeQuery();
         }
     }

@@ -1,44 +1,42 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}
-    Listagem de séries
-{% endblock %}
+{% block title %}Listagem de séries{% endblock %}
 
 {% block body %}
-    {% if series is empty %}
-        <h1>
-            Não há séries disponíveis.
-        </h1>
-        <a href="{{ path('app_series_form') }}" class="btn btn-primary">
-            Adicionar uma nova série
-        </a>
-    {% else %}
-        <h1>
-            Listagem de séries
-        </h1>
-        {% if is_granted('ROLE_USER') %}
-            <a href="{{ path('app_series_form') }}" class="btn btn-primary">
-                Adicionar uma nova série
-            </a>
-        {% endif %}
-        <ul class="list-group mt-3">
-            {% for serie in series %}
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <a href="{{ path('app_seasons', {id: serie.id}) }}" alt="{{ serie.name }}">
-                        {{ serie.name }}
-                    </a>
-                    <div class="d-flex gap-2">
-                        <a href="{{ path('app_series_edit_form', {series: serie.id}) }}" class="btn btn-sm btn-primary">
-                            Editar
-                        </a>
-                        <form method="post" action="{{ path('app_series_delete', {id: serie.id}) }}">
-                            <button class="btn btn-sm btn-danger">
-                                Deletar
-                            </button>
-                        </form>
-                    </div>
-                </li>
-            {% endfor %}
-        </ul>
+    {% if is_granted('ROLE_USER') %}
+    <a href="{{ path('app_series_form') }}" class="btn btn-dark mb-3">Adicionar</a>
     {% endif %}
+
+    <ul class="list-group">
+        {% for series in seriesList %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    {% if series.coverImagePath %}
+                        <img src="{{ asset('uploads/cover_image/') ~ series.coverImagePath }}"
+                             alt=""
+                             class="img-thumbnail me-3"
+                             width="100">
+                    {% endif %}
+                    {% if is_granted('ROLE_USER') %} <a href="{{ path('app_seasons', {series: series.id}) }}"> {% endif %}
+                        {{ series.name }}
+                    {% if is_granted('ROLE_USER') %} </a> {% endif %}
+                </div>
+
+                {% if is_granted('ROLE_USER') %}
+                <div class="d-flex">
+                    <a href="{{ path('app_edit_series_form', {series: series.id}) }}" class="btn btn-sm btn-primary me-2">
+                        E
+                    </a>
+                    <form method="post" action="{{ path('app_delete_series', {series: series.id}) }}">
+                        <input type="hidden" name="_method" value="DELETE">
+
+                        <button class="btn btn-sm btn-danger">
+                            X
+                        </button>
+                    </form>
+                </div>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
 {% endblock %}

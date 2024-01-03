@@ -18,10 +18,11 @@ security:
             provider: app_user_provider
 
             form_login:
+                # "app_login" is the name of the route created previously
                 login_path: app_login
                 check_path: app_login
                 default_target_path: app_series
-            
+
             logout:
                 path: app_logout
                 target: app_login
@@ -36,7 +37,7 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/series$, roles: PUBLIC_ACCESS }
         - { path: ^/(?!login|register), roles: ROLE_USER }
 
 when@test:

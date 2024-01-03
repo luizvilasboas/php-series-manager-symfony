@@ -3,10 +3,13 @@
 namespace App\Repository;
 
 use App\DTO\SeriesCreationInputDTO;
+use App\Entity\Episode;
+use App\Entity\Season;
 use App\Entity\Series;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Exception;
 use Doctrine\Persistence\ManagerRegistry;
-use Exception;
+use Psr\Log\LoggerInterface;
 
 /**
  * @extends ServiceEntityRepository<Series>
@@ -18,22 +21,20 @@ use Exception;
  */
 class SeriesRepository extends ServiceEntityRepository
 {
-    private SeasonRepository $seasonRepository;
-    private EpisodeRepository $episodeRepository;
-
-    public function __construct(ManagerRegistry $registry, SeasonRepository $seasonRepository, EpisodeRepository $episodeRepository)
-    {
+    public function __construct(
+        ManagerRegistry $registry,
+        private SeasonRepository $seasonRepository,
+        private EpisodeRepository $episodeRepository,
+        private LoggerInterface $logger
+    ) {
         parent::__construct($registry, Series::class);
-
-        $this->seasonRepository = $seasonRepository;
-        $this->episodeRepository = $episodeRepository;
     }
 
-    public function add(SeriesCreationInputDTO $input): void
+    public function add(SeriesCreationInputDTO $input): Series
     {
         $entityManager = $this->getEntityManager();
 
-        $series = new Series($input->seriesName);
+        $series = new Series($input->seriesName, $input->coverImage);
         $entityManager->persist($series);
         $entityManager->flush();
 
@@ -42,8 +43,11 @@ class SeriesRepository extends ServiceEntityRepository
             $seasons = $this->seasonRepository->findBy(['series' => $series]);
             $this->episodeRepository->addEpisodesPerSeason($input->episodesPerSeason, $seasons);
         } catch (Exception $e) {
+            $this->logger->error($e->getMessage());
             $this->remove($series, true);
         }
+
+        return $series;
     }
 
     public function remove(Series $entity, bool $flush = false): void
@@ -57,7 +61,32 @@ class SeriesRepository extends ServiceEntityRepository
 
     public function removeById(int $id): void
     {
-        $series = $this->getEntityManager()->getReference(Series::class, $id);
-        $this->remove($series, flush: true);
+        $series = $this->getEntityManager()->getPartialReference(Series::class, $id);
+        $this->remove($series, true);
     }
+
+//    /**
+//     * @return Series[] Returns an array of Series objects
+//     */
+//    public function findByExampleField($value): array
+//    {
+//        return $this->createQueryBuilder('s')
+//            ->andWhere('s.exampleField = :val')
+//            ->setParameter('val', $value)
+//            ->orderBy('s.id', 'ASC')
+//            ->setMaxResults(10)
+//            ->getQuery()
+//            ->getResult()
+//        ;
+//    }
+
+//    public function findOneBySomeField($value): ?Series
+//    {
+//        return $this->createQueryBuilder('s')
+//            ->andWhere('s.exampleField = :val')
+//            ->setParameter('val', $value)
+//            ->getQuery()
+//            ->getOneOrNullResult()
+//        ;
+//    }
 }

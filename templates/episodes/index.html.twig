@@ -5,22 +5,20 @@
 {% endblock %}
 
 {% block body %}
-    <h1 class="mb-3">
-        Episódios da temporada 
-        {{ season.number }}
-        da série 
-        {{ series.name }}
-    </h1>
     <form method="post">
         <ul class="list-group">
             {% for episode in episodes %}
-                <li class="list-group-item d-flex justify-content-between align-items-center">
+                <li class="list-group-item d-flex justify-content-between">
                     Episódio {{ episode.number }}
-                    <input type="checkbox" name="episodes[{{ episode.id }}]" {% if episode.watched %} checked {% endif %}>
+                    <input type="checkbox"
+                           name="episodes[{{ episode.id }}]"
+                           {% if episode.watched %} checked {% endif %}>
                 </li>
             {% endfor %}
         </ul>
-        <button class="btn btn-primary mt-3">Salvar</button>
+
+        <button class="btn btn-primary mt-2">
+            Salvar
+        </button>
     </form>
 {% endblock %}
-    

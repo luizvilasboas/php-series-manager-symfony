@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: SeriesRepository::class)]
+#[ORM\Cache]
 class Series
 {
     #[ORM\Id]
@@ -15,20 +16,24 @@ class Series
     #[ORM\Column]
     private int $id;
 
-    #[ORM\Column(length: 255)]
-
-    private string $name;
-
-    #[ORM\OneToMany(mappedBy: 'series', targetEntity: Season::class, orphanRemoval: true, cascade: ['persist'])]
+    #[ORM\OneToMany(
+        mappedBy: 'series',
+        targetEntity: Season::class,
+        orphanRemoval: true,
+    )]
+    #[ORM\Cache]
     private Collection $seasons;
 
-    public function __construct(string $name = '')
-    {
-        $this->name = $name;
+    public function __construct(
+        #[ORM\Column]
+        private string $name,
+        #[ORM\Column(nullable: true)]
+        private ?string $coverImagePath = null,
+    ) {
         $this->seasons = new ArrayCollection();
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -38,7 +43,7 @@ class Series
         return $this->name;
     }
 
-    public function setName(string $name): static
+    public function setName(string $name): self
     {
         $this->name = $name;
 
@@ -53,23 +58,36 @@ class Series
         return $this->seasons;
     }
 
-    public function addSeason(Season $season): static
+    public function addSeason(Season $season): self
     {
         if (!$this->seasons->contains($season)) {
-            $this->seasons->add($season);
+            $this->seasons[] = $season;
             $season->setSeries($this);
         }
 
         return $this;
     }
 
-    public function removeSeason(Season $season): static
+    public function removeSeason(Season $season): self
     {
         if ($this->seasons->removeElement($season)) {
+            // set the owning side to null (unless already changed)
             if ($season->getSeries() === $this) {
                 $season->setSeries(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCoverImagePath(): ?string
+    {
+        return $this->coverImagePath;
+    }
+
+    public function setCoverImagePath(string $coverImagePath): self
+    {
+        $this->coverImagePath = $coverImagePath;
 
         return $this;
     }
