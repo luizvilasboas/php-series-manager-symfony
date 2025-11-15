@@ -1,86 +1,91 @@
 # php-series-manager-symfony
 
-This undertaking was created within the framework of an Alura course aimed at mastering Symfony. It offers a comprehensive exploration of the Symfony framework, encompassing:
+> A web application for managing TV series, built with the Symfony framework as part of an Alura course.
 
-- Complete MVC CRUD functionality
-- Form implementation and session validation
-- Integration of caching and security measures
-- Handling of mailing, asynchronous processing, uploads, and testing
+## About the Project
+
+This project is a comprehensive web application for tracking TV series, developed to master the Symfony framework. It covers a wide range of features and concepts essential for modern web development.
+
+The project includes:
+*   Full MVC (Model-View-Controller) architecture with CRUD functionality.
+*   Form implementation with session validation.
+*   Integration of caching and security measures.
+*   Advanced features like email handling, asynchronous processing, and file uploads.
+*   A complete test suite to ensure application reliability.
+
+## Tech Stack
+
+*   [Symfony](https://symfony.com/)
+*   [PHP](https://www.php.net/)
+*   [Doctrine ORM](https://www.doctrine-project.org/projects/orm.html)
+*   [Composer](https://getcomposer.org/)
+*   [Node.js](https://nodejs.org/) (for asset management)
 
 ## Usage
 
-Follow these steps to set up and run the Symfony project on your local machine.
+Below are the instructions for you to set up and run the project locally.
 
 ### Prerequisites
 
-Ensure that the following prerequisites are installed on your system:
+You need to have the following software installed:
 
-- PHP (>= 7.4)
-- Composer
-- Symfony CLI
-- Node.js and npm (for asset management)
+*   [PHP](https://www.php.net/) (version 7.4 or higher)
+*   [Composer](https://getcomposer.org/download/)
+*   [Symfony CLI](https://symfony.com/download)
+*   [Node.js](https://nodejs.org/) and npm
 
-### Steps
+### Installation and Setup
 
-1. **Clone the Repository:**
+Follow the steps below:
 
-   ```
-   git clone https://github.com/luizvilasboas/php-series-manager-symfony.git
-   ```
+1.  **Clone the repository**
+    ```bash
+    git clone https://github.com/luizvilasboas/php-series-manager-symfony.git
+    ```
 
-2. **Navigate to Project Directory:**
+2.  **Navigate to the project directory**
+    ```bash
+    cd php-series-manager-symfony
+    ```
 
-   ```
-   cd php-series-manager-symfony
-   ```
+3.  **Install PHP dependencies**
+    ```bash
+    composer install
+    ```
 
-3. **Install Dependencies:**
+4.  **Install frontend assets**
+    ```bash
+    npm install
+    npm run dev
+    ```
 
-   ```
-   composer install
-   ```
+5.  **Configure the environment**
+    Create a local environment file by copying the example:
+    ```bash
+    cp .env .env.local
+    ```
+    Update the `DATABASE_URL` and other necessary settings in your new `.env.local` file.
 
-4. **Configure Environment Variables:**
+6.  **Set up the database**
+    ```bash
+    php bin/console doctrine:database:create
+    php bin/console doctrine:migrations:migrate
+    ```
 
-   Copy the provided `.env` file to create a new `.env.local` file.
+### Workflow
 
-   ```
-   cp .env .env.local
-   ```
-
-   Update the necessary configuration settings in the `.env` file, such as database credentials.
-
-5. **Create Database:**
-
-   ```
-   php bin/console doctrine:database:create
-   ```
-
-6. **Run Migrations:**
-
-   ```
-   php bin/console doctrine:migrations:migrate
-   ```
-
-7. **Install Frontend Assets:**
-
-   ```
-   npm install
-   npm run dev
-   ```
-
-8. **Start the Symfony Server:**
-
-   ```
-   php -S localhost:8000 -t public
-   ```
-
-   Access the application at [http://localhost:8000](http://localhost:8000) in your web browser.
+To run the application, start the built-in PHP server from the project root:
+```bash
+php -S localhost:8000 -t public
+```
+The application will be available in your browser at `http://localhost:8000`.
 
 ## Contributing
 
-If you wish to contribute to this project, feel free to open a merge request. We welcome all forms of contribution!
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+
+If you have a suggestion that would make this better, please fork the repo and create a pull request.
 
 ## License
 
-This project is licensed under the [MIT](https://github.com/luizvilasboas/php-series-manager-symfony/blob/main/LICENSE). Refer to the LICENSE file for more details.
+This project is licensed under the MIT License. See the `LICENSE` file for details.
